@@ -47,6 +47,7 @@ body {
 #form #link-input {
   width:50%;
   height:25px;
+  border-radius:4px;
 }
 
 
