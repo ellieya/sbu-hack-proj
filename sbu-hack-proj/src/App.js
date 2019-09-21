@@ -1,73 +1,119 @@
 import React, { Component } from 'react';
+import Typed from 'react-typed';
+
+let certaintyMsgs = [
+  "Hi! I'm a cute and fluffy moon bunny. I normally pound mochi on the moon, but I can also tell you whether a picture you give me is Uranus or not!",
+  "Hey, your image doesn't seem to be working!",
+  "That's Mercury, not Uranus!",
+  "That's Venus, not Uranus!",
+  "That's the planet we're on, not Uranus!",
+  "That's Mars, not Uranus! Who wants to go to Mars anyways?! Weirdos",
+  "That's Jupiter, not Uranus!",
+  "That's Saturn, not Uranus!",
+  "That's Neptune, not Uranus!",
+  "Heeeeeey! It's Uranus! *wink wink*",
+  "I have absolutely no idea what that is"
+]
 
 function LinkButton(props) {
   return (
     <div className="input-set">
       <input id="link-input" type="text" placeholder="Type link here..." /> <br />
-      <input className="button" type="button" value="UPLOAD LINK" onClick={ props.clicked }/>
+      <input className="button" type="button" value="UPLOAD LINK" onClick={props.clicked} />
     </div>
   )
 }
 
+function BunnyImg(props) {
+  if (props.msgValue === 9)
+    return <img id="bunny" src="./sbu_bunny_3.png" alt="A happy winking moon bunny speaking" />
+  else if (props.msgValue === 10 || props.msgValue === 1)
+    return <img id="bunny" src="./sbu_bunny_4.png" alt="A happy winking moon bunny speaking" />
+  else if (props.msgValue > 1)
+    return <img id="bunny" src="./sbu_bunny_2.png" alt="A happy moon bunny speaking" />
+  else
+    return <img id="bunny" src="./sbu_bunny_1.png" alt="A cute, fluffy bunny" />
+}
+
 class App extends Component {
 
-  certaintyMsgs = [
-    "Pretty sure that isn't Uranus!",
-    "I don't think that's Uranus.",
-    "I think that's Uranus...",
-    "Sure looks like a Uranus!",
-    "That's DEFINITELY uranus *wink*"
-  ]
+  constructor(props) {
+    super(props);
+    this.noImgUrl = "./ngimg.png";
+    this.defaultUrl = "./default.jpg"
+    this.state = {
+      imgLink: this.defaultUrl,
+      msgValue: 0,
+      bunnyImg: "./sbu_bunny_1.png"
+    };
+  }
 
-  state = {
-    fileUploaded: false,
-    imgLink: "https://static.thenounproject.com/png/1174579-200.png",
-    certaintyMsg: null
-  };
+  handleClick(event) {
+    //Take value in textbox
+    let docObj = document.getElementById("link-input");
+    let link = docObj.value;
 
-  /*
-  
-  */
+    //if imgLink == link, or link is empty string do nothing
+    if (!(this.state.imgLink === link || link === "")) {
+      //Later: check this image against API to also set certaintyMsg
 
- handleClick(event) {
-  //Take value in textbox
-  let link = document.getElementById("link-input").value;
+      this.setState({
+        imgLink: link,
+        msgValue: 9
+      })
+    };
 
-  //Later: if imgLink == link, do nothing
+    //Blank out document object
+    docObj.value = null;
+  }
 
-  //Update component state
-  //Later: check valid image link
-    //if invalid want to make certaintyMsg = null
-  //Later: check this image against API to also set certaintyMsg
-  this.setState({
-    imgLink: link,
-    certaintyMsg: this.certaintyMsgs[0]
-  });
-}
- 
+
+  handleError(event) {
+    this.setState(
+      {
+        imgLink: this.noImgUrl,
+        msgValue: 1
+      }
+    );
+  }
+
 
   render() {
-    /* Want to make img displayed change based on whether fileUploaded true or not */
     let img = this.state.imgLink;
 
     return (
       <div id="entity">
-        <h1>Is it Uranus?</h1>
+        <h1 id="title">
+          <Typed
+            strings={['Is this your anus?', 'Is this Uranus?']}
+            typeSpeed={50}
+          />
+        </h1>
         <div id="display">
           <div id="display-img">
-            <img src={img}/>
+            <img src={img} onError={e => this.handleError(e)} />
           </div>
         </div>
         <div id="form">
           <br />
-          <LinkButton clicked={ e => this.handleClick(e)} />
-          {/* <input className="button" type="button" value="UPLOAD FILE" /> */}
+          <LinkButton clicked={e => this.handleClick(e)} />
         </div>
         <br />
+        <br />
 
-        {/* Want to make this message change based on API response (certainty) */}
-        <h1>{this.state.certaintyMsg}</h1>
 
+        <div id="bunny-speak">
+          <BunnyImg msgValue={this.state.msgValue} />
+          <div id="speech-bubble">
+          {certaintyMsgs[this.state.msgValue]}
+          </div>
+        </div>
+
+        <div id="footer">
+          <span>
+            <a href="https://www.dafont.com/visitor.font">Visitor font by Brian Kent</a>. <a href="https://www.dafont.com/full-pack-2025.font">Full Pack 2025 font by imagex</a>. <a href="https://www.pngsee.com/maxp/wibTx/">Background image by PngSee.</a>
+            </span>
+        </div>
       </div>
 
     )
