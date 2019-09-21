@@ -59,7 +59,7 @@ class App extends Component {
 
       this.setState({
         imgLink: link,
-        msgValue: 10
+        msgValue: 9 //INCOMPLETE PORTION
       })
     };
 
